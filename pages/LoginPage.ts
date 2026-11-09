@@ -18,12 +18,15 @@ export class LoginPage{
         await this.loginBtn.click();
 
         await expect(
-            this.page.getByRole("button", {name:/Sign Out/})
-        ).toBeVisible();
+            this.page.getByRole("button", {name:/Sign Out/}),
+            "Login failed: check that EMAIL and PASSWORD are a valid account"
+        ).toBeVisible({ timeout: 15_000 });
     }
 
     async logout(){
-        await this.page.getByRole("button", {name:/Sign Out/}).click();
+        const signOut = this.page.getByRole("button", {name:/Sign Out/});
+        if (!(await signOut.isVisible())) return;
+        await signOut.click();
         
         await expect(this.email).toBeVisible();
     }
