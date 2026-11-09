@@ -18,9 +18,9 @@ export default defineConfig({
     },
   ],
   reporter :[
-    ['list'],
+    process.env.CI ? ['github'] : ['list'],
     ['html',{open: 'never', outputFolder: "reporta"}],
-    ["json", {outputFolder: "reports/resultes.json"}],
+    ["json", {outputFile: "reports/results.json"}],
     ["allure-playwright", { outputFolder : "allure-results"}],
   ],
 });
