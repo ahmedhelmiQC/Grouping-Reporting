@@ -3,26 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "playwright test --project=full",
-    "test:smoke": "playwright test --project=smoke",
-    "test:regression": "playwright test --project=regression",
-    "test:valid": "playwright test tests/valid --project=full",
-    "test:invalid": "playwright test tests/invalid --project=full",
-    "test:login": "playwright test --project=full --grep @login",
-    "test:cart": "playwright test --project=full --grep @cart",
-    "test:checkout": "playwright test --project=full --grep @checkout",
-    "test:e2e": "playwright test --project=full --grep @e2e",
-    "report": "playwright show-report reporta",
-    "report:screenshots": "node utils/capture-report.mts"
-  },
+  "scripts": {},
   "keywords": [],
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
-    "allure-playwright": "^3.14.0",
-    "typescript": "^7.0.2"
+    "allure-playwright": "^3.14.0"
   }
 }

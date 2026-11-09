@@ -15,7 +15,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run the flaky test
-        run:  npx playwright test flaky.spec.ts --project=full
+        run:  npx playwright test flaky.spec.ts --project=chromium
       - uses: actions/upload-artifact@v5
         if: ${{ !cancelled()}}
         with:
