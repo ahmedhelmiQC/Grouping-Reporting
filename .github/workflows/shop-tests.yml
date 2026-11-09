@@ -1,29 +1,90 @@
 name: Shop Tests
+
 on:
   push:
-    branches: [playwright]
+    branches: [main, playwright]
+  pull_request:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Execution mode (Playwright project)"
+        type: choice
+        options: [full, smoke, regression]
+        default: full
+      grep:
+        description: "Optional tag filter, e.g. @cart or @login"
+        required: false
+        default: ""
+
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      EMAIL: original.ahmed99@gmail.com
-      PASSWORD: PASSWORD=Ahmed@123
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      MODE: ${{ inputs.mode || 'full' }}
+      GREP: ${{ inputs.grep || '.' }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
+          cache: npm
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run shop tests
-        run: npx playwright test tests/shop.spec.ts --project=chromuim
-      - uses: actions/upload-artifact@v5
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Run Valid (positive) suite
+        run: npx playwright test tests/valid --project="$MODE" --grep="$GREP" --output=test-results/valid --pass-with-no-tests
+        env:
+          PLAYWRIGHT_BLOB_OUTPUT_FILE: blob-report/valid.zip
+      - name: Run Invalid (negative) suite
         if: ${{ !cancelled() }}
+        run: npx playwright test tests/invalid --project="$MODE" --grep="$GREP" --output=test-results/invalid --pass-with-no-tests
+        env:
+          PLAYWRIGHT_BLOB_OUTPUT_FILE: blob-report/invalid.zip
+
+      - name: Merge Valid + Invalid into one HTML and JSON report
+        if: ${{ !cancelled() }}
+        run: npx playwright merge-reports --reporter=html,json ./blob-report
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: reporta
+          PLAYWRIGHT_JSON_OUTPUT_FILE: reports/results.json
+      - name: Screenshot the HTML report
+        if: ${{ !cancelled() }}
+        run: npm run report:screenshots
+
+      - name: Upload HTML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
         with:
-          name: playwright-report
+          name: html-report
           path: reporta/
-          retention-days: 7
+          retention-days: 14
+      - name: Upload JSON results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: json-results
+          path: reports/
+          retention-days: 14
+      - name: Upload app screenshots and traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-screenshots-and-traces
+          path: |
+            test-results/**/*.png
+            test-results/**/trace.zip
+          retention-days: 14
+      - name: Upload HTML report screenshots
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: report-screenshots
+          path: report-screenshots/
+          retention-days: 14

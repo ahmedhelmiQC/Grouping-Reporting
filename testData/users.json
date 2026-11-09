@@ -1,0 +1,27 @@
+{
+  "invalidCredentials": [
+    {
+      "scenario": "unregistered email",
+      "email": "tets@gmail.com",
+      "password": "A1234566",
+      "error": "Incorrect email or password."
+    }
+  ],
+  "invalidForms": [
+    {
+      "scenario": "empty email and password",
+      "email": "",
+      "password": "",
+      "fieldErrors": ["*Email is required", "*Password is required"]
+    },
+    {
+      "scenario": "malformed email",
+      "email": "not-an-email",
+      "password": "A1234566",
+      "fieldErrors": ["*Enter Valid Email"]
+    }
+  ],
+  "wrongPassword": "WrongPassword@1",
+  "loginError": "Incorrect email or password.",
+  "checkoutShippingError": "Please Enter Full Shipping Information"
+}
