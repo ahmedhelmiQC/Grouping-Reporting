@@ -23,6 +23,15 @@ export class LoginPage{
         ).toBeVisible({ timeout: 15_000 });
     }
 
+    async invalidlogin(email: string , password:string){
+        await this.page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+        await this.email.fill(email);
+        await this.passweord.fill(password);
+        await this.loginBtn.click();
+
+        await expect(this.page.locator("#toast-container")).toBeVisible();
+    }
+
     async logout(){
         const signOut = this.page.getByRole("button", {name:/Sign Out/});
         if (!(await signOut.isVisible())) return;
