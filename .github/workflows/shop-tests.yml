@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      EMAIL: ${{ secrets.EMAIL }}
-      PASSWORD: ${{ secrets.PASSWORD }}
+      EMAIL: original.ahmed99@gmail.com
+      PASSWORD: PASSWORD=Ahmed@123
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
