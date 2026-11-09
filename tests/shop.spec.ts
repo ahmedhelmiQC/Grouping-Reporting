@@ -6,8 +6,8 @@ test.use({
     launchOptions: {slowMo: 800},
 });
 
-const email = process.env.EMAIL ?? "";
-const password =  process.env.PASSWORD ?? "";
+const email = "original.ahmed99@gmail.com";
+const password =  "Ahmed@123";
 
 const productName = "ZARA COAT 3";
 
