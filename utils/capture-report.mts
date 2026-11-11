@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, rmSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const reportFile = path.resolve("reporta", "index.html");
+const reportFile = path.resolve("report", "index.html");
 const outDir = path.resolve("report-screenshots");
 
 const views: [name: string, filter: string][] = [

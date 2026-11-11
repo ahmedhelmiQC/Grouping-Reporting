@@ -159,7 +159,7 @@ Run every command from the **project root**. Running `npx playwright test` from 
 
 | Artifact | Contents |
 | --- | --- |
-| `html-report` | `reporta/` HTML report |
+| `html-report` | `report/` HTML report |
 | `json-results` | `reports/results.json` |
 | `app-screenshots-and-traces` | every test screenshot + traces of failed tests |
 | `report-screenshots` | screenshots of the HTML report |
@@ -173,12 +173,12 @@ Download artifacts from the workflow run page (**Summary → Artifacts**).
 The HTML reporter is configured in `playwright.config.ts`:
 
 ```ts
-["html", { open: "never", outputFolder: "reporta" }],
+["html", { open: "never", outputFolder: "report" }],
 ["json", { outputFile: "reports/results.json" }],
 ["allure-playwright", { resultsDir: "allure-results" }],
 ```
 
-Every run overwrites the report with the latest results. Open it with `npm run report` or open `reporta/index.html`. Each test entry shows its tags, its Passed/Failed status, its screenshot, and for failures the error and a **View Trace** link.
+Every run overwrites the report with the latest results. Open it with `npm run report` or open `report/index.html`. Each test entry shows its tags, its Passed/Failed status, its screenshot, and for failures the error and a **View Trace** link.
 
 ## Screenshot locations
 

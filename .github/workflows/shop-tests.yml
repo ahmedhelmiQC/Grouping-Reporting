@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: html-report
-          path: reporta/
+          path: report/
           retention-days: 14
       - name: Upload JSON results
         if: ${{ !cancelled() }}

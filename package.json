@@ -8,7 +8,7 @@
     "test": "playwright test",
     "test:smoke": "playwright test --grep @smoke",
     "test:regression": "playwright test --grep @regression",
-    "report": "playwright show-report reporta",
+    "report": "playwright show-report report",
     "report:screenshots": "node utils/capture-report.mts"
   },
   "keywords": [],

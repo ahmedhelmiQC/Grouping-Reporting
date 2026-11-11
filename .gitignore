@@ -7,7 +7,7 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 .env
-/reporta/
+/report/
 /reports/
 /allure-results/
 /report-screenshots/

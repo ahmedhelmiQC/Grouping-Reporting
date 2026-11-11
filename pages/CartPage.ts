@@ -17,12 +17,25 @@ export class CartPage{
     }
 
     async open(){
-        if (!this.page.url().includes("#/dashboard/cart")){
-            const loaded = this.page.waitForResponse((res) => res.url().includes("/user/get-cart-products/"));
-            await this.cartlink.click();
-            await loaded;
-        }
-        await expect(this.items.first().or(this.emptyMessage)).toBeVisible();
+        if (this.page.url().includes("#/dashboard/cart")) return;
+
+        const loaded = this.page.waitForResponse((res) => res.url().includes("/user/get-cart-products/"));
+        await this.cartlink.click();
+        const body = await (await loaded).json().catch(() => ({}));
+        const count = Array.isArray(body.products) ? body.products.length : 0;
+
+        // The empty-cart heading can flash before the rows render, so wait for the server's count.
+        if (count > 0) await expect(this.items).toHaveCount(count);
+        else await this.expectEmpty();
+    }
+
+    async cartCount(){
+        const digits = (await this.cartlink.innerText()).replace(/\D/g, "");
+        return digits ? Number(digits) : 0;
+    }
+
+    async expectCartCount(expected: number){
+        await expect.poll(() => this.cartCount(), {message: `Cart button should show ${expected}`}).toBe(expected);
     }
 
     // The cart shows names in their stored case (e.g. "iphone 13 pro"), so match exactly but ignore case.

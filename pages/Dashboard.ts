@@ -29,6 +29,11 @@ export class Dashboard{
     }
 
     async expectProduct(name: string){
-    await expect(this.cards.filter({hasText: name})).toBeVisible();
+        await expect(this.cards.filter({hasText: name})).toBeVisible();
+    }
+
+    async expectNoProduct(name: string){
+        await expect(this.cards.first()).toBeVisible();
+        await expect(this.cards.filter({hasText: name})).toHaveCount(0);
     }
 }
