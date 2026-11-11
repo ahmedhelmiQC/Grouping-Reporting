@@ -10,7 +10,13 @@ export default defineConfig({
   fullyParallel : false,
   testDir: "./tests",
   retries: process.env.CI ? 2 : undefined,
-  workers: process.env.CI ? 2 : undefined,
+  // All tests share one account; a login in a parallel worker can wipe cart changes made in another.
+  workers: 1,
+  use: {
+    // Screenshots are taken for every test by the fixture in tests/test-setup.ts.
+    screenshot: "off",
+    trace: "retain-on-failure",
+  },
   projects: [
     {
       name: "chromuim",
@@ -18,9 +24,9 @@ export default defineConfig({
     },
   ],
   reporter :[
-    ['list'],
-    ['html',{open: 'never', outputFolder: "reporta"}],
-    ["json", {outputFolder: "reports/resultes.json"}],
-    ["allure-playwright", { outputFolder : "allure-results"}],
+    process.env.CI ? ['github'] : ['list'],
+    ['html',{open: 'never', outputFolder: "report"}],
+    ["json", {outputFile: "reports/results.json"}],
+    ["allure-playwright", { resultsDir : "allure-results"}],
   ],
 });

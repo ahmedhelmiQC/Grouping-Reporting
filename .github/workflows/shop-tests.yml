@@ -1,0 +1,63 @@
+name: Shop Tests
+
+on:
+  push:
+    branches: [main, playwright]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Type-check
+        run: npm run typecheck
+      - name: Run shop tests
+        run: npx playwright test tests/shop.spec.ts --project=chromuim
+      - name: Screenshot the HTML report
+        if: ${{ !cancelled() }}
+        run: npm run report:screenshots
+
+      - name: Upload HTML report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: html-report
+          path: report/
+          retention-days: 14
+      - name: Upload JSON results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: json-results
+          path: reports/
+          retention-days: 14
+      - name: Upload app screenshots and traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-screenshots-and-traces
+          path: |
+            test-results/**/*.png
+            test-results/**/trace.zip
+          retention-days: 14
+      - name: Upload HTML report screenshots
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: report-screenshots
+          path: report-screenshots/
+          retention-days: 14
